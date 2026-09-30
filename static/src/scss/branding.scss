@@ -1,0 +1,62 @@
+.o_trucalc_auth {
+    --trucalc-primary: #022f5b;
+    --trucalc-primary-hover: #526680;
+    --trucalc-text: #022f5b;
+    --trucalc-surface: #ffffff;
+    --trucalc-subtle-accent: #cfddee;
+    --trucalc-control-border: #526680;
+
+    color: var(--trucalc-text);
+
+    a:not(.btn):not(.alert-link),
+    .btn-link,
+    .text-primary,
+    .text-primary-emphasis {
+        color: var(--trucalc-primary) !important;
+    }
+
+    .btn-primary {
+        --btn-color: var(--trucalc-surface);
+        --btn-bg: var(--trucalc-primary);
+        --btn-border-color: var(--trucalc-primary);
+        --btn-hover-color: var(--trucalc-surface);
+        --btn-hover-bg: var(--trucalc-primary-hover);
+        --btn-hover-border-color: var(--trucalc-primary-hover);
+        --btn-active-color: var(--trucalc-surface);
+        --btn-active-bg: var(--trucalc-primary-hover);
+        --btn-active-border-color: var(--trucalc-primary-hover);
+        --btn-focus-shadow-rgb: 2, 47, 91;
+    }
+
+    .form-control,
+    .form-select {
+        border-color: var(--trucalc-control-border);
+
+        &:focus {
+            border-color: var(--trucalc-primary);
+            box-shadow: 0 0 0 0.2rem rgba(2, 47, 91, 0.25);
+        }
+    }
+
+    .list-group {
+        --list-group-color: var(--trucalc-text);
+        --list-group-action-color: var(--trucalc-primary);
+        --list-group-action-hover-color: var(--trucalc-primary);
+        --list-group-action-hover-bg: var(--trucalc-subtle-accent);
+        --list-group-action-active-color: var(--trucalc-primary);
+        --list-group-action-active-bg: var(--trucalc-subtle-accent);
+        --list-group-active-color: var(--trucalc-surface);
+        --list-group-active-bg: var(--trucalc-primary);
+        --list-group-active-border-color: var(--trucalc-primary);
+    }
+
+    .passkey_login_link {
+        color: var(--trucalc-primary);
+
+        &:hover,
+        &:focus {
+            color: var(--trucalc-primary);
+            background-color: var(--trucalc-subtle-accent);
+        }
+    }
+}
