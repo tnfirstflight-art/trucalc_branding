@@ -1,6 +1,6 @@
 {
     "name": "TruCalc Branding",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "author": "TruCalc",
     "license": "LGPL-3",
     "category": "Hidden",
@@ -8,6 +8,7 @@
     "depends": ["web", "portal", "auth_signup"],
     "data": [
         "views/web_templates.xml",
+        "views/portal_templates.xml",
     ],
     "assets": {
         "web.assets_frontend": [

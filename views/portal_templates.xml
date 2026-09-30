@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="remove_generic_brand_promotion" inherit_id="web.brand_promotion" name="Remove Generic Odoo Promotion">
+        <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace"/>
+    </template>
+
+    <template id="remove_portal_sidebar_branding" inherit_id="portal.portal_record_sidebar" name="Remove Portal Sidebar Odoo Promotion">
+        <xpath expr="//div[hasclass('o_portal_sidebar_content')]/div[hasclass('d-lg-block', 'text-muted')][a[contains(@href, 'odoo.com')]]" position="replace"/>
+    </template>
+</odoo>
