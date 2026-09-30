@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="digest_mail_main_trucalc"
+              inherit_id="digest.digest_mail_main"
+              name="TruCalc digest mail content">
+        <xpath expr="//div[contains(concat(' ', normalize-space(@class), ' '), ' by_odoo ')][a[contains(@href, 'odoo.com')]]"
+               position="replace">
+            <div t-if="unsubscribe_token or (object and object._name == 'digest.digest')"
+                 class="preference" style="margin-bottom: 15px;">
+                <t t-if="unsubscribe_token">
+                    <a t-attf-href="/digest/#{object.id}/unsubscribe?token=#{unsubscribe_token}&amp;user_id=#{user.id}"
+                       target="_blank" style="text-decoration: none;">
+                        <span style="color: #878d97;">Unsubscribe</span>
+                    </a>
+                </t>
+                <t t-elif="object and object._name == 'digest.digest'">
+                    <a t-att-href="'/odoo/digest.digest/%s' % object.id"
+                       target="_blank" style="text-decoration: none;">
+                        <span style="color: #878d97;">Unsubscribe</span>
+                    </a>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//tr[@t-if='display_mobile_banner']" position="replace"/>
+        <xpath expr="//p[@id='powered']" position="replace"/>
+    </template>
+</odoo>

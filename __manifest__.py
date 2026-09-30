@@ -1,16 +1,20 @@
 {
     "name": "TruCalc Branding",
-    "version": "19.0.1.3.0",
+    "version": "19.0.1.4.0",
     "author": "TruCalc",
     "license": "LGPL-3",
     "category": "Hidden",
     "summary": "TruCalc authentication and browser identity",
-    "depends": ["web", "portal", "auth_signup"],
+    "depends": ["web", "portal", "auth_signup", "digest"],
     "data": [
         "data/pwa_config.xml",
+        "data/mail_branding_data.xml",
         "views/web_templates.xml",
         "views/pwa_templates.xml",
         "views/portal_templates.xml",
+        "views/mail_templates.xml",
+        "views/auth_mail_templates.xml",
+        "views/digest_templates.xml",
     ],
     "assets": {
         "web.assets_frontend": [
