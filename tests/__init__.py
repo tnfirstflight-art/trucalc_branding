@@ -1,4 +1,5 @@
 from . import test_auth_branding
+from . import test_backend_admin_branding
 from . import test_mail_branding
 from . import test_mailbot_branding
 from . import test_portal_branding

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Keep the Apps administration surface, but remove marketplace navigation. -->
+    <record id="base.theme_store" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="base.menu_third_party" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="base.menu_theme_store" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Neutralize direct invocation of the retired marketplace URL actions. -->
+    <record id="base.action_third_party" model="ir.actions.act_url">
+        <field name="url">/odoo/apps</field>
+    </record>
+    <record id="base.action_theme_store" model="ir.actions.act_url">
+        <field name="url">/odoo/apps</field>
+    </record>
+</odoo>

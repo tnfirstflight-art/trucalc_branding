@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_form_admin_promotion_cleanup" model="ir.ui.view">
+        <field name="name">ir.module.module.form.admin.promotion.cleanup</field>
+        <field name="model">ir.module.module</field>
+        <field name="inherit_id" ref="base.module_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website']" position="attributes">
+                <attribute name="invisible">not website or to_buy</attribute>
+            </xpath>
+            <xpath expr="//a[contains(@href, 'odoo.com/pricing')]" position="replace"/>
+        </field>
+    </record>
+
+    <record id="module_kanban_admin_promotion_cleanup" model="ir.ui.view">
+        <field name="name">ir.module.module.kanban.admin.promotion.cleanup</field>
+        <field name="model">ir.module.module</field>
+        <field name="inherit_id" ref="base.module_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='menu']/a[@t-att-href='record.website.raw_value']" position="attributes">
+                <attribute name="t-if">record.website.raw_value &amp;&amp; !record.to_buy.raw_value</attribute>
+            </xpath>
+            <xpath expr="//t[@t-name='card']//a[@t-att-href='record.website.raw_value']" position="attributes">
+                <attribute name="t-if">!record.to_buy.raw_value</attribute>
+            </xpath>
+            <xpath expr="//a[contains(@href, 'odoo.com/pricing')]" position="replace"/>
+        </field>
+    </record>
+
+    <record id="settings_admin_promotion_cleanup" model="ir.ui.view">
+        <field name="name">res.config.settings.admin.promotion.cleanup</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='inter_company']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//setting[@id='sms']" position="attributes">
+                <attribute name="documentation"/>
+            </xpath>
+            <xpath expr="//setting[@id='sms']/widget[@name='iap_buy_more_credits']" position="replace"/>
+            <xpath expr="//setting[@id='partner_autocomplete']/widget[@name='iap_buy_more_credits']" position="replace"/>
+            <xpath expr="//setting[@id='iap_credits_setting']" position="replace"/>
+        </field>
+    </record>
+</odoo>
