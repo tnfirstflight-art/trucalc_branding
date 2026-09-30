@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="trucalc_branding.SessionExpiredDialog"
+       t-inherit="web.SessionExpiredDialog"
+       t-inherit-mode="extension">
+        <xpath expr="//Dialog" position="attributes">
+            <attribute name="title.translate">Session Expired</attribute>
+        </xpath>
+        <xpath expr="//p[hasclass('text-prewrap')]" position="replace">
+            <p class="text-prewrap">Your session has expired. Please sign in again.</p>
+        </xpath>
+    </t>
+</templates>

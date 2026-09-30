@@ -1,6 +1,6 @@
 {
     "name": "TruCalc Branding",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "author": "TruCalc",
     "license": "LGPL-3",
     "category": "Hidden",
@@ -13,12 +13,34 @@
     "assets": {
         "web.assets_frontend": [
             "trucalc_branding/static/src/scss/branding.scss",
+            (
+                "after",
+                "web/static/src/public/error_notifications.js",
+                "trucalc_branding/static/src/js/public_error_notifications.js",
+            ),
         ],
         "web.assets_backend": [
             "trucalc_branding/static/src/js/title_service.js",
+            (
+                "after",
+                "web/static/src/webclient/user_menu/user_menu_items.js",
+                "trucalc_branding/static/src/js/user_menu_items.js",
+            ),
+            (
+                "after",
+                "web/static/src/core/errors/error_dialogs.js",
+                "trucalc_branding/static/src/js/error_dialogs.js",
+            ),
+            (
+                "after",
+                "web/static/src/core/errors/error_dialogs.xml",
+                "trucalc_branding/static/src/xml/error_dialogs.xml",
+            ),
         ],
         "web.assets_unit_tests": [
+            "trucalc_branding/static/src/js/public_error_notifications.js",
             "trucalc_branding/static/tests/title_service.test.js",
+            "trucalc_branding/static/tests/backend_branding.test.js",
         ],
     },
     "installable": True,
