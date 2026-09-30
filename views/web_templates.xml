@@ -18,4 +18,13 @@
         <xpath expr="//div[hasclass('border-top')]/a[contains(@href, 'odoo.com')]"
                position="replace"/>
     </template>
+
+    <template id="frontend_browser_metadata" inherit_id="web.frontend_layout"
+              name="TruCalc Frontend Browser Metadata">
+        <xpath expr="//meta[@name='viewport']" position="after">
+            <meta name="theme-color" content="#022f5b"/>
+            <link rel="apple-touch-icon"
+                  href="/trucalc_branding/static/src/img/trucalc-icon-ios.png"/>
+        </xpath>
+    </template>
 </odoo>

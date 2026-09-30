@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="webclient_bootstrap_metadata" inherit_id="web.webclient_bootstrap"
+              name="TruCalc Webclient Browser Metadata">
+        <xpath expr="//meta[@name='theme-color']" position="attributes">
+            <attribute name="content">#022f5b</attribute>
+        </xpath>
+        <xpath expr="//link[@rel='apple-touch-icon']" position="attributes">
+            <attribute name="href">/trucalc_branding/static/src/img/trucalc-icon-ios.png</attribute>
+        </xpath>
+    </template>
+
+    <template id="webclient_offline_branding" inherit_id="web.webclient_offline"
+              name="TruCalc Offline Branding">
+        <xpath expr="//t[@t-set='title']" position="replace">
+            <t t-set="title">TruCalc Offline</t>
+        </xpath>
+        <xpath expr="//style" position="replace">
+            <style>
+                body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                padding:0;
+                margin:0;
+                background-color: #fff;
+                color: rgb(17, 24, 39);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                height: 100vh;
+                width: 100vw;
+                user-select: none;
+                }
+                .card {
+                width: 80%;
+                }
+                .card img {
+                width: 96px;
+                height: auto;
+                filter: grayscale(.6);
+                }
+                .card button {
+                background-color: #022f5b;
+                color: #FFFFFF;
+                border: 1px solid #022f5b;
+                border-radius: .25rem;
+                padding: .5rem 1rem;
+                cursor: pointer;
+                font-size: 1.2rem;
+                font-weight: 500;
+                }
+            </style>
+        </xpath>
+        <xpath expr="//meta[@name='viewport']" position="after">
+            <meta name="theme-color" content="#022f5b"/>
+            <link rel="apple-touch-icon"
+                  href="/trucalc_branding/static/src/img/trucalc-icon-ios.png"/>
+        </xpath>
+        <xpath expr="//div[hasclass('card')]/img" position="attributes">
+            <attribute name="alt">TruCalc logo</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('card')]/h1" position="replace">
+            <h1>TruCalc is temporarily unavailable offline.</h1>
+        </xpath>
+        <xpath expr="//div[hasclass('card')]/p" position="replace">
+            <p>Reconnect to the internet and try again.</p>
+        </xpath>
+    </template>
+
+    <template id="scoped_app_metadata" inherit_id="web.webclient_scoped_app"
+              name="TruCalc Scoped App Metadata">
+        <xpath expr="//meta[@name='viewport']" position="after">
+            <meta name="theme-color" content="#022f5b"/>
+        </xpath>
+    </template>
+</odoo>
