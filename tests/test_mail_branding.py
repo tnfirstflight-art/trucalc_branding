@@ -162,7 +162,6 @@ class TestTruCalcMailBranding(TransactionCase):
 
     def test_digest_render_preserves_kpi_unsubscribe_and_schedule(self):
         digest = self.env.ref("digest.digest_digest_default")
-        self.company.email_secondary_color = self.blue
         schedule_before = (digest.periodicity, digest.next_run_date, digest.state)
         mail_count_before = self.env["mail.mail"].search_count([])
         unsubscribe_token = digest._get_unsubscribe_token(self.env.user.id)
@@ -208,6 +207,7 @@ class TestTruCalcMailBranding(TransactionCase):
         self.assertIn("42", rendered)
         self.assertIn("Unsubscribe", rendered)
         self.assertIn(f"/digest/{digest.id}/unsubscribe", rendered)
+        self.assertIn(self.blue, rendered.lower())
         self.assertNotIn("#714b67", rendered.lower())
         self.assertEqual(
             (digest.periodicity, digest.next_run_date, digest.state), schedule_before
