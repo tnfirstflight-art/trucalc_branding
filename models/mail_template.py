@@ -9,6 +9,8 @@ class MailTemplate(models.Model):
         "auth_signup.mail_template_user_signup_account_created",
         "auth_signup.portal_set_password_email",
     )
+    _TRUCALC_TOTP_INVITE_XMLID = "auth_totp_mail.mail_template_totp_invite"
+    _TRUCALC_TOTP_CODE_XMLID = "auth_totp_mail.mail_template_totp_mail_code"
 
     @api.model
     def apply_trucalc_auth_mail_branding(self):
@@ -38,7 +40,44 @@ class MailTemplate(models.Model):
                 }
                 if branded_subjects != subject_translations:
                     template.update_field_translations("subject", branded_subjects)
+
+        self._apply_trucalc_totp_mail_branding()
         return True
+
+    @api.model
+    def _apply_trucalc_totp_mail_branding(self):
+        invite = self.env.ref(self._TRUCALC_TOTP_INVITE_XMLID, raise_if_not_found=False)
+        if invite:
+            invite = invite.sudo()
+            translations = (
+                invite._fields["subject"]._get_stored_translations(invite) or {}
+            )
+            branded = {
+                lang: value.replace("Odoo account", "TruCalc account")
+                for lang, value in translations.items()
+            }
+            if branded != translations:
+                invite.update_field_translations("subject", branded)
+
+        code_template = self.env.ref(
+            self._TRUCALC_TOTP_CODE_XMLID, raise_if_not_found=False
+        )
+        if code_template:
+            code_template = code_template.sudo()
+            translations = (
+                code_template._fields["body_html"]._get_stored_translations(
+                    code_template
+                )
+                or {}
+            )
+            branded = {
+                lang: value.replace("#875A7B", "#022f5b").replace(
+                    "#875a7b", "#022f5b"
+                )
+                for lang, value in translations.items()
+            }
+            if branded != translations:
+                code_template.update_field_translations("body_html", branded)
 
     @api.model
     def _trucalc_brand_auth_body(self, xmlid, body):
