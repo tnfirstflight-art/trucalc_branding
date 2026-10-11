@@ -3,7 +3,9 @@ from markupsafe import Markup
 
 from odoo.addons.trucalc_branding.hooks import (
     LEGACY_ODOO_PURPLE,
+    OWNER_APPROVED_PREDECESSOR_BLUE,
     TRUCALC_BLUE,
+    TRUCALC_MAIN_COMPANY_NAME,
     migrate_main_company_email_color,
     post_init_hook,
 )
@@ -81,11 +83,23 @@ class TestCompanyEmailColorMigration(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.company = cls.env.ref("base.main_company")
+        cls.env.cr.execute(
+            "UPDATE res_company SET name = %s WHERE id = %s",
+            (TRUCALC_MAIN_COMPANY_NAME, cls.company.id),
+        )
+        cls.env.invalidate_all()
 
     def _set_color(self, color):
         self.env.cr.execute(
             "UPDATE res_company SET email_secondary_color = %s WHERE id = %s",
             (color, self.company.id),
+        )
+        self.env.invalidate_all()
+
+    def _set_name(self, name):
+        self.env.cr.execute(
+            "UPDATE res_company SET name = %s WHERE id = %s",
+            (name, self.company.id),
         )
         self.env.invalidate_all()
 
@@ -161,6 +175,36 @@ class TestCompanyEmailColorMigration(TransactionCase):
         self.assertIn("/mail/unfollow", rendered)
         self.assertEqual(self.env["mail.mail"].search_count([]), mail_count_before)
 
+    def test_owner_approved_predecessor_migrates_only_main_company(self):
+        other_company = self.env["res.company"].create({
+            "name": "Regression Bank",
+            "email_secondary_color": OWNER_APPROVED_PREDECESSOR_BLUE,
+        })
+        self._set_color(OWNER_APPROVED_PREDECESSOR_BLUE)
+        protected_before = self._protected_state()
+
+        migrate_main_company_email_color(self.env.cr)
+        self.env.invalidate_all()
+
+        self.assertEqual(self.company.email_secondary_color, TRUCALC_BLUE)
+        self.assertEqual(
+            other_company.email_secondary_color,
+            OWNER_APPROVED_PREDECESSOR_BLUE,
+        )
+        protected_after = self._protected_state()
+        self.assertEqual(
+            protected_after["target_company_except_color"],
+            protected_before["target_company_except_color"],
+        )
+        self.assertEqual(
+            protected_after["other_companies"],
+            protected_before["other_companies"],
+        )
+
+        company_after_first_run = self.company.read()[0]
+        migrate_main_company_email_color(self.env.cr)
+        self.assertEqual(self.company.read()[0], company_after_first_run)
+
     def test_already_correct_color_is_noop(self):
         self._set_color(TRUCALC_BLUE)
         self.env.cr.execute(
@@ -195,5 +239,22 @@ class TestCompanyEmailColorMigration(TransactionCase):
             migrate_main_company_email_color(self.env.cr)
         self.env.invalidate_all()
         self.assertEqual(self.company.email_secondary_color, unexpected)
+        self.assertEqual(self._identity(), identity_before)
+        self.assertEqual(self._protected_state(), protected_before)
+
+    def test_unrecognized_main_company_blocks_without_mutation(self):
+        self._set_color(OWNER_APPROVED_PREDECESSOR_BLUE)
+        self._set_name("Unrecognized Company")
+        identity_before = self._identity()
+        protected_before = self._protected_state()
+
+        with self.assertRaisesRegex(RuntimeError, "not the recognized TruCalc company"):
+            migrate_main_company_email_color(self.env.cr)
+
+        self.env.invalidate_all()
+        self.assertEqual(
+            self.company.email_secondary_color,
+            OWNER_APPROVED_PREDECESSOR_BLUE,
+        )
         self.assertEqual(self._identity(), identity_before)
         self.assertEqual(self._protected_state(), protected_before)

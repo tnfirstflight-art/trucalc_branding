@@ -1,11 +1,14 @@
 LEGACY_ODOO_PURPLE = "#875A7B"
+OWNER_APPROVED_PREDECESSOR_BLUE = "#2963bc"
 TRUCALC_BLUE = "#022f5b"
+TRUCALC_MAIN_COMPANY_NAME = "TruCalc Valuation Solutions"
 
 
 def _main_company(cr):
     cr.execute(
         """
-        SELECT data.id, data.res_id, company.email_secondary_color
+        SELECT data.id, data.res_id, company.name,
+               company.email_secondary_color
           FROM ir_model_data data
           JOIN res_company company ON company.id = data.res_id
          WHERE data.module = 'base'
@@ -23,8 +26,20 @@ def _main_company(cr):
 
 
 def migrate_main_company_email_color(cr):
-    external_id, company_id, current_color = _main_company(cr)
-    if current_color not in (None, "", LEGACY_ODOO_PURPLE, TRUCALC_BLUE):
+    external_id, company_id, company_name, current_color = _main_company(cr)
+    if company_name != TRUCALC_MAIN_COMPANY_NAME:
+        raise RuntimeError(
+            "TruCalc company email color migration aborted: "
+            "base.main_company is not the recognized TruCalc company"
+        )
+
+    if current_color not in (
+        None,
+        "",
+        LEGACY_ODOO_PURPLE,
+        OWNER_APPROVED_PREDECESSOR_BLUE,
+        TRUCALC_BLUE,
+    ):
         raise RuntimeError(
             "TruCalc company email color migration aborted: "
             "base.main_company has unexpected email_secondary_color %r"
@@ -37,9 +52,10 @@ def migrate_main_company_email_color(cr):
             UPDATE res_company
                SET email_secondary_color = %s
              WHERE id = %s
+               AND name = %s
                AND email_secondary_color IS NOT DISTINCT FROM %s
             """,
-            (TRUCALC_BLUE, company_id, current_color),
+            (TRUCALC_BLUE, company_id, company_name, current_color),
         )
         if cr.rowcount != 1:
             raise RuntimeError(
@@ -47,10 +63,16 @@ def migrate_main_company_email_color(cr):
                 "base.main_company changed concurrently"
             )
 
-    verified_external_id, verified_company_id, verified_color = _main_company(cr)
+    (
+        verified_external_id,
+        verified_company_id,
+        verified_company_name,
+        verified_color,
+    ) = _main_company(cr)
     if (
         verified_external_id != external_id
         or verified_company_id != company_id
+        or verified_company_name != TRUCALC_MAIN_COMPANY_NAME
         or verified_color != TRUCALC_BLUE
     ):
         raise RuntimeError(

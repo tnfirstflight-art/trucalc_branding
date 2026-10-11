@@ -1,6 +1,8 @@
 from markupsafe import Markup
 from urllib.parse import parse_qs, urlparse
 
+from lxml import etree
+
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, new_test_user
 
@@ -213,3 +215,24 @@ class TestTruCalcMailBranding(TransactionCase):
             (digest.periodicity, digest.next_run_date, digest.state), schedule_before
         )
         self.assertEqual(self.env["mail.mail"].search_count([]), mail_count_before)
+
+    def test_digest_debranding_preserves_optional_addon_extension_anchor(self):
+        arch = self.env.ref("digest.digest_mail_main")._get_combined_arch()
+        anchors = arch.xpath(
+            "//div[contains(concat(' ', normalize-space(@class), ' '), "
+            "' by_odoo ')]"
+        )
+        self.assertEqual(len(anchors), 1)
+        self.assertGreaterEqual(len(anchors[0].xpath("./t")), 2)
+        serialized = etree.tostring(arch, encoding="unicode")
+        self.assertNotIn("www.odoo.com", serialized)
+        self.assertNotIn("Sent by Odoo", serialized)
+        self.assertIn("TruCalc", serialized)
+
+        mass_mailing = self.env["ir.module.module"].sudo().search([
+            ("name", "=", "mass_mailing"),
+            ("state", "=", "installed"),
+        ], limit=1)
+        if mass_mailing:
+            self.assertIn("mailing_report_token", serialized)
+            self.assertIn("Turn off Mailing Reports", serialized)

@@ -1,6 +1,6 @@
 {
     "name": "TruCalc Branding",
-    "version": "19.0.1.8.0",
+    "version": "19.0.1.8.1",
     "author": "TruCalc",
     "license": "LGPL-3",
     "category": "Hidden",
